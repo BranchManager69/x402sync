@@ -17,7 +17,7 @@ export const baseCdpConfig: SyncConfig = {
   paginationStrategy: PaginationStrategy.TIME_WINDOW,
   timeWindowInMs: ONE_DAY_IN_MS * 7,
   limit: 40_000, // NOTE(shafu): 20_000 is not enough
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.BASE),
+  facilitators: FACILITATORS.filter(f => f.addresses[Chain.BASE]),
   buildQuery,
   transformResponse,
 };

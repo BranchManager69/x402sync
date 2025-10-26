@@ -7,11 +7,12 @@ import {
   QueryProvider,
   TransferEventData,
   BitQueryTransferRowStream,
+  FacilitatorConfig,
 } from '@/trigger/types';
 
 export function buildQuery(
   config: SyncConfig,
-  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date
 ): string {
@@ -22,7 +23,7 @@ export function buildQuery(
           limit: {count: ${config.limit}}
           where: {
             Transaction: {
-              From: {in: ${JSON.stringify(facilitator.address)}}
+              From: {in: ${JSON.stringify(facilitatorConfig.address)}}
               Time: {
                 since: "${since.toISOString()}"
                 till: "${now.toISOString()}"
@@ -58,7 +59,8 @@ export function buildQuery(
 export function transformResponse(
   data: unknown,
   config: SyncConfig,
-  facilitator: Facilitator
+  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig
 ): TransferEventData[] {
   return (data as BitQueryTransferRowStream[]).map(item => ({
     address: item.Transfer.Currency?.SmartContract || DEFAULT_CONTRACT_ADDRESS,
@@ -70,7 +72,7 @@ export function transformResponse(
     tx_hash: item.Transaction.Hash,
     chain: config.chain,
     provider: config.provider,
-    decimals: facilitator.token.decimals,
+    decimals: facilitatorConfig.token.decimals,
     facilitator_id: facilitator.id,
   }));
 }

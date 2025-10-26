@@ -3,6 +3,7 @@ import {
   Facilitator,
   TransferEventData,
   BigQueryTransferRow,
+  FacilitatorConfig,
 } from '@/trigger/types';
 import { USDC_MULTIPLIER, USDC_SOLANA } from '@/trigger/constants';
 import { getAccount } from '@solana/spl-token';
@@ -11,13 +12,13 @@ import Bottleneck from 'bottleneck';
 
 export function buildQuery(
   config: SyncConfig,
-  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date
 ): string {
   return `
         DECLARE signer_pubkeys ARRAY<STRING> DEFAULT [
-        "${facilitator.address}"
+        "${facilitatorConfig.address}"
         ];
         DECLARE usdc_mint STRING DEFAULT '${USDC_SOLANA}';
         DECLARE start_ts TIMESTAMP DEFAULT TIMESTAMP('${since.toISOString()}');
@@ -85,7 +86,8 @@ export function buildQuery(
 export async function transformResponse(
   data: unknown,
   config: SyncConfig,
-  facilitator: Facilitator
+  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig
 ): Promise<TransferEventData[]> {
   const connection = new Connection(
     process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com'
@@ -121,7 +123,7 @@ export async function transformResponse(
           tx_hash: row.tx_hash,
           chain: row.chain,
           provider: config.provider,
-          decimals: facilitator.token.decimals,
+          decimals: facilitatorConfig.token.decimals,
           facilitator_id: facilitator.id,
           log_index: row.transfer_index,
         };

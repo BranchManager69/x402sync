@@ -1,6 +1,6 @@
 import { Facilitator } from './types';
 
-// NOTE(shafu): CHAT GPT GENERATED crap, don't ask me how it works 
+// NOTE(shafu): CHAT GPT GENERATED crap, don't ask me how it works
 
 // Find duplicate IDs
 type FindDuplicateId<
@@ -16,17 +16,19 @@ type FindDuplicateId<
   : never;
 
 // Find duplicate address+token pairs within the same id:chain
-type ExtractAddressTokenPairs<F extends Facilitator> = F['addresses'] extends Record<
-  infer C,
-  infer Addrs
->
-  ? Addrs extends readonly [
-      infer A extends { address: string; token: { address: string } },
-      ...infer RestAddrs,
-    ]
-    ? `${F['id']}:${C & string}:${A['address']}:${A['token']['address']}` | ExtractAddressTokenPairs<{ id: F['id']; addresses: { [K in C]: RestAddrs } } & Facilitator>
-    : never
-  : never;
+type ExtractAddressTokenPairs<F extends Facilitator> =
+  F['addresses'] extends Record<infer C, infer Addrs>
+    ? Addrs extends readonly [
+        infer A extends { address: string; token: { address: string } },
+        ...infer RestAddrs,
+      ]
+      ?
+          | `${F['id']}:${C & string}:${A['address']}:${A['token']['address']}`
+          | ExtractAddressTokenPairs<
+              { id: F['id']; addresses: { [K in C]: RestAddrs } } & Facilitator
+            >
+      : never
+    : never;
 
 type FindDuplicateAddressToken<
   T extends readonly Facilitator[],
@@ -42,7 +44,9 @@ type FindDuplicateAddressToken<
     : FindDuplicateAddressToken<Rest, Seen>
   : never;
 
-export function validateUniqueFacilitators<const T extends readonly Facilitator[]>(
+export function validateUniqueFacilitators<
+  const T extends readonly Facilitator[],
+>(
   facilitators: FindDuplicateId<T> extends never
     ? FindDuplicateAddressToken<T> extends never
       ? T

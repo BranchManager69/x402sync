@@ -7,5 +7,5 @@ export const polygonChainConfig = createEvmChainConfig({
   maxDuration: 1000,
   network: 'polygon',
   chain: 'matic',
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.POLYGON),
+  facilitators: FACILITATORS.filter(f => f.addresses[Chain.POLYGON]),
 });

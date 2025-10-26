@@ -7,5 +7,5 @@ export const baseChainConfig = createEvmChainConfig({
   maxDuration: 1000,
   network: 'base',
   chain: 'base',
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.BASE),
+  facilitators: FACILITATORS.filter(f => f.addresses[Chain.BASE]),
 });

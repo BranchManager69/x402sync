@@ -16,7 +16,7 @@ export const solanaBigQueryConfig: SyncConfig = {
   paginationStrategy: PaginationStrategy.TIME_WINDOW,
   timeWindowInMs: ONE_DAY_IN_MS * 30,
   limit: 35_000, // NOTE(shafu): solana could be a lot more!
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.SOLANA),
+  facilitators: FACILITATORS.filter(f => f.addresses[Chain.SOLANA]),
   buildQuery,
   transformResponse,
 };

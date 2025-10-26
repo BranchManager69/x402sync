@@ -7,12 +7,13 @@ import {
   TransferEventData,
   Chain,
   BitQueryTransferRow,
+  FacilitatorConfig,
 } from '../../../types';
 import { FACILITATORS } from '@/trigger/config';
 
 function buildQuery(
   config: SyncConfig,
-  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date,
   offset?: number
@@ -28,7 +29,7 @@ function buildQuery(
           }
           amount: {gt: 0}
           signer: {
-            in: ${JSON.stringify(facilitator.address)}
+            in: ${JSON.stringify(facilitatorConfig.address)}
           }
         ) {
           block {
@@ -62,7 +63,8 @@ function buildQuery(
 function transformResponse(
   data: unknown,
   config: SyncConfig,
-  facilitator: Facilitator
+  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig
 ): TransferEventData[] {
   return (data as BitQueryTransferRow[]).map(transfer => ({
     address: transfer.currency.address,
@@ -74,7 +76,7 @@ function transformResponse(
     tx_hash: transfer.transaction.signature,
     chain: config.chain,
     provider: config.provider,
-    decimals: facilitator.token.decimals,
+    decimals: facilitatorConfig.token.decimals,
     facilitator_id: facilitator.id,
   }));
 }
@@ -87,7 +89,7 @@ export const solanaChainConfig: SyncConfig = {
   apiUrl: 'https://graphql.bitquery.io',
   paginationStrategy: PaginationStrategy.OFFSET,
   limit: 20_000,
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.SOLANA),
+  facilitators: FACILITATORS.filter(f => f.addresses[Chain.SOLANA]),
   buildQuery,
   transformResponse,
 };

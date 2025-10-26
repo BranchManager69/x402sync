@@ -16,7 +16,7 @@ export const polygonBigQueryConfig: SyncConfig = {
   paginationStrategy: PaginationStrategy.TIME_WINDOW,
   timeWindowInMs: ONE_DAY_IN_MS * 7,
   limit: 20_000,
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.POLYGON),
+  facilitators: FACILITATORS.filter(f => f.addresses[Chain.POLYGON]),
   buildQuery,
   transformResponse,
 };

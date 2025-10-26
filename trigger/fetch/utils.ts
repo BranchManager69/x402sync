@@ -1,9 +1,9 @@
 import { logger } from '@trigger.dev/sdk/v3';
-import { Facilitator, SyncConfig, TransferEventData } from '../types';
+import { FacilitatorConfig, SyncConfig, TransferEventData } from '../types';
 
 export async function fetchWithTimeWindowing(
   config: SyncConfig,
-  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date,
   executeQuery: (query: string) => Promise<TransferEventData[]>
@@ -23,7 +23,7 @@ export async function fetchWithTimeWindowing(
 
     const query = config.buildQuery(
       config,
-      facilitator,
+      facilitatorConfig,
       currentStart,
       currentEnd
     );

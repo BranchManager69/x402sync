@@ -3,12 +3,13 @@ import {
   Facilitator,
   TransferEventData,
   CdpTransferRow,
+  FacilitatorConfig,
 } from '@/trigger/types';
 import { TRANSFER_EVENT_SIG } from '@/trigger/constants';
 
 export function buildQuery(
   config: SyncConfig,
-  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date
 ): string {
@@ -24,8 +25,8 @@ export function buildQuery(
       log_index
     FROM base.events
     WHERE event_signature = '${TRANSFER_EVENT_SIG}'
-      AND address = '${facilitator.token.address.toLowerCase()}'
-      AND transaction_from = '${facilitator.address.toLowerCase()}'
+      AND address = '${facilitatorConfig.token.address.toLowerCase()}'
+      AND transaction_from = '${facilitatorConfig.address.toLowerCase()}'
       AND block_timestamp >= '${formatDateForSql(since)}'
       AND block_timestamp < '${formatDateForSql(now)}'
     ORDER BY block_timestamp DESC
@@ -36,7 +37,8 @@ export function buildQuery(
 export function transformResponse(
   data: unknown,
   config: SyncConfig,
-  facilitator: Facilitator
+  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig
 ): TransferEventData[] {
   return (data as CdpTransferRow[]).map(row => ({
     address: row.contract_address,
@@ -49,7 +51,7 @@ export function transformResponse(
     log_index: row.log_index,
     chain: config.chain,
     provider: config.provider,
-    decimals: facilitator.token.decimals,
+    decimals: facilitatorConfig.token.decimals,
     facilitator_id: facilitator.id,
   }));
 }
