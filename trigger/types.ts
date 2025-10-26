@@ -76,13 +76,16 @@ export enum Chain {
   SOLANA = 'solana',
 }
 
-export interface Facilitator {
-  id: string;
-  syncStartDate: Date;
-  enabled: boolean;
+export interface FacilitatorAddress {
   address: string;
   token: Token;
-  chain: string;
+  syncStartDate: Date;
+  enabled: boolean;
+}
+
+export interface Facilitator {
+  id: string;
+  addresses: Partial<Record<Chain, FacilitatorAddress[]>>;
 }
 
 export interface Token {

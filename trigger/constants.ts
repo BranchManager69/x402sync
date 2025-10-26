@@ -24,3 +24,9 @@ export const USDC_SOLANA_TOKEN = {
   decimals: USDC_DECIMALS,
   symbol: 'USDC',
 };
+
+export const USDC_POLYGON_TOKEN = {
+  address: USDC_POLYGON,
+  decimals: USDC_DECIMALS,
+  symbol: 'USDC',
+};
