@@ -1,25 +1,38 @@
-import { Facilitator } from './types';
+import { Facilitator, Chain } from './types';
 
-type FacilitatorKey<F extends Facilitator> = `${F['id']}:${F['chain']}`;
+// Extract all address+token pairs with their id and chain
+type ExtractAddressTokenPairs<F extends Facilitator> = F['addresses'] extends Record<
+  infer C extends Chain,
+  infer Addrs
+>
+  ? Addrs extends Array<infer A extends { address: string; token: { address: string } }>
+    ? {
+        [K in C]: A extends { address: infer Addr; token: { address: infer Token } }
+          ? `${F['id']}:${K}:${Addr & string}:${Token & string}`
+          : never;
+      }[C]
+    : never
+  : never;
 
-type HasDuplicate<
+// Find duplicates by checking each pair
+type FindDuplicate<
   T extends readonly Facilitator[],
   Seen extends string = never,
 > = T extends readonly [
   infer First extends Facilitator,
   ...infer Rest extends readonly Facilitator[],
 ]
-  ? FacilitatorKey<First> extends Seen
-    ? FacilitatorKey<First>
-    : HasDuplicate<Rest, Seen | FacilitatorKey<First>>
+  ? ExtractAddressTokenPairs<First> extends infer CurrentPairs extends string
+    ? CurrentPairs extends Seen
+      ? CurrentPairs // Found a duplicate
+      : FindDuplicate<Rest, Seen | CurrentPairs>
+    : never
   : never;
 
-export function validateUniqueFacilitators<
-  const T extends readonly Facilitator[],
->(
-  facilitators: HasDuplicate<T> extends never
+export function validateUniqueFacilitators<const T extends readonly Facilitator[]>(
+  facilitators: FindDuplicate<T> extends never
     ? T
-    : `❌ COMPILE ERROR: Duplicate facilitator '${HasDuplicate<T>}' - each id+chain must be unique!`
+    : `❌ COMPILE ERROR: Duplicate address/token pair detected: '${FindDuplicate<T>}' (format: id:chain:address:token)`
 ): T {
   return facilitators;
 }

@@ -30,17 +30,6 @@ const _FACILITATORS = validateUniqueFacilitators([
     },
   },
   {
-    id: 'x402rs',
-    addresses: {
-      [Chain.BASE]: [{
-        address: '0xd8dfc729cbd05381647eb5540d756f4f8ad63eec',
-        token: USDC_BASE_TOKEN,
-        syncStartDate: new Date('2024-12-05'),
-        enabled: true,
-      }],
-    },
-  },
-  {
     id: 'aurracloud',
     addresses: {
       [Chain.BASE]: [{
@@ -72,9 +61,9 @@ const _FACILITATORS = validateUniqueFacilitators([
         enabled: false,
       }],
       [Chain.BASE]: [{
-        address: '0x97D38AA5dE015245DCCa76305b53ABE6DA25F6a5',
+        address: '0xd8dfc729cbd05381647eb5540d756f4f8ad63eec',
         token: USDC_BASE_TOKEN,
-        syncStartDate: new Date('2025-10-20'),
+        syncStartDate: new Date('2024-12-05'),
         enabled: true,
       }],
     },
