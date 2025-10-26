@@ -19,17 +19,6 @@ const _FACILITATORS = validateUniqueFacilitators([
     },
   },
   {
-    id: 'payAI',
-    addresses: {
-      [Chain.BASE]: [{
-        address: '0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63',
-        token: USDC_BASE_TOKEN,
-        syncStartDate: new Date('2025-05-18'),
-        enabled: true,
-      }],
-    },
-  },
-  {
     id: 'aurracloud',
     addresses: {
       [Chain.BASE]: [{
@@ -65,6 +54,11 @@ const _FACILITATORS = validateUniqueFacilitators([
         token: USDC_BASE_TOKEN,
         syncStartDate: new Date('2024-12-05'),
         enabled: true,
+      },{
+        address: '0x97D38AA5dE015245DCCa76305b53ABE6DA25F6a5',
+        token: USDC_BASE_TOKEN,
+        syncStartDate: new Date('2025-10-20'),
+        enabled: true,
       }],
     },
   },
@@ -75,6 +69,12 @@ const _FACILITATORS = validateUniqueFacilitators([
         address: '2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4',
         token: USDC_SOLANA_TOKEN,
         syncStartDate: new Date('2025-07-01'),
+        enabled: true,
+      }],
+      [Chain.BASE]: [{
+        address: '0xc6699d2aada6c36dfea5c248dd70f9cb0235cb63',
+        token: USDC_BASE_TOKEN,
+        syncStartDate: new Date('2025-05-18'),
         enabled: true,
       }],
     },

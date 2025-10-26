@@ -1,21 +1,34 @@
-import { Facilitator, Chain } from './types';
+import { Facilitator } from './types';
 
-// Extract all address+token pairs with their id and chain
+// NOTE(shafu): CHAT GPT GENERATED crap, don't ask me how it works 
+
+// Find duplicate IDs
+type FindDuplicateId<
+  T extends readonly Facilitator[],
+  Seen extends string = never,
+> = T extends readonly [
+  infer First extends Facilitator,
+  ...infer Rest extends readonly Facilitator[],
+]
+  ? First['id'] extends Seen
+    ? First['id'] // Found a duplicate ID
+    : FindDuplicateId<Rest, Seen | First['id']>
+  : never;
+
+// Find duplicate address+token pairs within the same id:chain
 type ExtractAddressTokenPairs<F extends Facilitator> = F['addresses'] extends Record<
-  infer C extends Chain,
+  infer C,
   infer Addrs
 >
-  ? Addrs extends Array<infer A extends { address: string; token: { address: string } }>
-    ? {
-        [K in C]: A extends { address: infer Addr; token: { address: infer Token } }
-          ? `${F['id']}:${K}:${Addr & string}:${Token & string}`
-          : never;
-      }[C]
+  ? Addrs extends readonly [
+      infer A extends { address: string; token: { address: string } },
+      ...infer RestAddrs,
+    ]
+    ? `${F['id']}:${C & string}:${A['address']}:${A['token']['address']}` | ExtractAddressTokenPairs<{ id: F['id']; addresses: { [K in C]: RestAddrs } } & Facilitator>
     : never
   : never;
 
-// Find duplicates by checking each pair
-type FindDuplicate<
+type FindDuplicateAddressToken<
   T extends readonly Facilitator[],
   Seen extends string = never,
 > = T extends readonly [
@@ -25,14 +38,16 @@ type FindDuplicate<
   ? ExtractAddressTokenPairs<First> extends infer CurrentPairs extends string
     ? CurrentPairs extends Seen
       ? CurrentPairs // Found a duplicate
-      : FindDuplicate<Rest, Seen | CurrentPairs>
-    : never
+      : FindDuplicateAddressToken<Rest, Seen | CurrentPairs>
+    : FindDuplicateAddressToken<Rest, Seen>
   : never;
 
 export function validateUniqueFacilitators<const T extends readonly Facilitator[]>(
-  facilitators: FindDuplicate<T> extends never
-    ? T
-    : `❌ COMPILE ERROR: Duplicate address/token pair detected: '${FindDuplicate<T>}' (format: id:chain:address:token)`
+  facilitators: FindDuplicateId<T> extends never
+    ? FindDuplicateAddressToken<T> extends never
+      ? T
+      : `❌ COMPILE ERROR: Duplicate address/token pair: '${FindDuplicateAddressToken<T>}' (format: id:chain:address:token)`
+    : `❌ COMPILE ERROR: Duplicate facilitator ID: '${FindDuplicateId<T>}' - each ID must appear only once!`
 ): T {
   return facilitators;
 }
