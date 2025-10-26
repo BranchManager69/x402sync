@@ -108,6 +108,19 @@ const _FACILITATORS = validateUniqueFacilitators([
     },
   },
   {
+    id: 'dexter',
+    addresses: {
+      [Chain.SOLANA]: [
+        {
+          address: 'DEXVS3su4dZQWTvvPnLDJLRK1CeeKG6K3QqdzthgAkNV',
+          token: USDC_SOLANA_TOKEN,
+          syncStartDate: new Date('2025-10-26'),
+          enabled: true,
+        },
+      ],
+    },
+  },
+  {
     id: 'daydreams',
     addresses: {
       [Chain.BASE]: [
