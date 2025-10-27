@@ -17,6 +17,14 @@ const _FACILITATORS = validateUniqueFacilitators([
     chain: Chain.BASE,
   },
   {
+    id: 'openx402',
+    enabled: true,
+    syncStartDate: new Date('2025-10-25'),
+    address: '0x97316fa4730bc7d3b295234f8e4d04a0a4c093e8',
+    token: USDC_BASE_TOKEN,
+    chain: Chain.BASE,
+  },
+  {
     id: 'payAI',
     enabled: true,
     syncStartDate: new Date('2025-05-18'),
