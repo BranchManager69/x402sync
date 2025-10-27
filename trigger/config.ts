@@ -133,6 +133,19 @@ const _FACILITATORS = validateUniqueFacilitators([
       ],
     },
   },
+  {
+    id: 'openx402',
+    addresses: {
+      [Chain.BASE]: [
+        {
+          address: '0x97316fa4730bc7d3b295234f8e4d04a0a4c093e8',
+          token: USDC_BASE_TOKEN,
+          syncStartDate: new Date('2025-10-25'),
+          enabled: true,
+        },
+      ],
+    },
+  },
 ] as const);
 
 export const FACILITATORS: Facilitator[] =
