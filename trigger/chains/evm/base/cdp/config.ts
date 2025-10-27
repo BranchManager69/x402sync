@@ -1,12 +1,8 @@
 import { ONE_DAY_IN_MS, ONE_MINUTE_IN_SECONDS } from '@/trigger/constants';
-import {
-  SyncConfig,
-  PaginationStrategy,
-  QueryProvider,
-  Chain,
-} from '@/trigger/types';
+import { SyncConfig, PaginationStrategy, QueryProvider } from '@/trigger/types';
 import { buildQuery, transformResponse } from './query';
-import { FACILITATORS } from '@/trigger/config';
+import { FACILITATORS_BY_CHAIN } from '@/trigger/config';
+import { Chain } from '@/trigger/types';
 
 export const baseCdpConfig: SyncConfig = {
   cron: '* * * * *',
@@ -17,7 +13,7 @@ export const baseCdpConfig: SyncConfig = {
   paginationStrategy: PaginationStrategy.TIME_WINDOW,
   timeWindowInMs: ONE_DAY_IN_MS * 7,
   limit: 40_000, // NOTE(shafu): 20_000 is not enough
-  facilitators: FACILITATORS.filter(f => f.addresses[Chain.BASE]),
+  facilitators: FACILITATORS_BY_CHAIN(Chain.BASE),
   buildQuery,
   transformResponse,
 };

@@ -1,4 +1,4 @@
-import { FACILITATORS } from '@/trigger/config';
+import { FACILITATORS_BY_CHAIN } from '@/trigger/config';
 import {
   SyncConfig,
   PaginationStrategy,
@@ -16,7 +16,7 @@ export const polygonBigQueryConfig: SyncConfig = {
   paginationStrategy: PaginationStrategy.TIME_WINDOW,
   timeWindowInMs: ONE_DAY_IN_MS * 7,
   limit: 20_000,
-  facilitators: FACILITATORS.filter(f => f.addresses[Chain.POLYGON]),
+  facilitators: FACILITATORS_BY_CHAIN(Chain.POLYGON),
   buildQuery,
   transformResponse,
 };

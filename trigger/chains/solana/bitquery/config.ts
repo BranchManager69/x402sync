@@ -9,7 +9,7 @@ import {
   BitQueryTransferRow,
   FacilitatorConfig,
 } from '../../../types';
-import { FACILITATORS } from '@/trigger/config';
+import { FACILITATORS_BY_CHAIN } from '@/trigger/config';
 
 function buildQuery(
   config: SyncConfig,
@@ -89,7 +89,7 @@ export const solanaChainConfig: SyncConfig = {
   apiUrl: 'https://graphql.bitquery.io',
   paginationStrategy: PaginationStrategy.OFFSET,
   limit: 20_000,
-  facilitators: FACILITATORS.filter(f => f.addresses[Chain.SOLANA]),
+  facilitators: FACILITATORS_BY_CHAIN(Chain.SOLANA),
   buildQuery,
   transformResponse,
 };
