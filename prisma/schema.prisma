@@ -35,4 +35,8 @@ model TransferEvent {
   @@index([tx_hash])
   @@index([chain, block_timestamp])
   @@index([block_timestamp, facilitator_id], map: "TransferEvent_block_timestamp_facilitator_id_idx")
+
+  @@index([chain, block_timestamp, facilitator_id])
+  @@index([sender])
+  @@index([recipient])
 }

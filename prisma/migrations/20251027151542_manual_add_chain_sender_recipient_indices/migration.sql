@@ -1,0 +1,5 @@
+-- Indices created manually with CONCURRENTLY in production database
+-- Already exist:
+-- - TransferEvent_chain_block_timestamp_facilitator_id_idx
+-- - TransferEvent_sender_idx
+-- - TransferEvent_recipient_idx
