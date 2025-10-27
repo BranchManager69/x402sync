@@ -6,20 +6,20 @@ import {
 } from '@/trigger/constants';
 import {
   SyncConfig,
-  Facilitator,
   TransferEventData,
   BigQueryTransferRow,
+  FacilitatorConfig,
 } from '@/trigger/types';
 
 export function buildQuery(
   config: SyncConfig,
-  facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date
 ): string {
   return `
     DECLARE facilitator_addresses ARRAY<STRING> DEFAULT [
-    "${facilitator.address}"
+    "${facilitatorConfig.address}"
     ];
     DECLARE usdc_address STRING DEFAULT '${USDC_POLYGON.toLowerCase()}';
     DECLARE transfer_topic STRING DEFAULT '${TRANSFER_TOPIC}';

@@ -1,4 +1,4 @@
-import { FACILITATORS } from '@/trigger/config';
+import { FACILITATORS_BY_CHAIN } from '@/trigger/config';
 import { createEvmChainConfig } from '@/trigger/fetch/bitquery/query';
 import { Chain } from '@/trigger/types';
 
@@ -7,5 +7,5 @@ export const baseChainConfig = createEvmChainConfig({
   maxDuration: 1000,
   network: 'base',
   chain: 'base',
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.BASE),
+  facilitators: FACILITATORS_BY_CHAIN(Chain.BASE),
 });

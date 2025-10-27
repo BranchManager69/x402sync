@@ -4,6 +4,7 @@ import {
   PaginationStrategy,
   QueryProvider,
   TransferEventData,
+  FacilitatorConfig,
 } from '../types';
 import { fetchWithOffsetPagination, fetchBitquery } from './bitquery/fetch';
 import { fetchBigQuery } from './bigquery/fetch';
@@ -13,6 +14,7 @@ import { fetchCDP } from './cdp/fetch';
 export async function fetchTransfers(
   config: SyncConfig,
   facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date,
   onBatchFetched?: (batch: TransferEventData[]) => Promise<void>
@@ -20,11 +22,25 @@ export async function fetchTransfers(
   const strategy = config.paginationStrategy;
 
   if (strategy === PaginationStrategy.TIME_WINDOW) {
-    return fetchWithWindow(config, facilitator, since, now, onBatchFetched);
+    return fetchWithWindow(
+      config,
+      facilitator,
+      facilitatorConfig,
+      since,
+      now,
+      onBatchFetched
+    );
   }
 
   if (strategy === PaginationStrategy.OFFSET) {
-    return fetchWithOffset(config, facilitator, since, now, onBatchFetched);
+    return fetchWithOffset(
+      config,
+      facilitator,
+      facilitatorConfig,
+      since,
+      now,
+      onBatchFetched
+    );
   }
 
   throw new Error(`Unsupported pagination strategy: ${strategy as string}`);
@@ -33,6 +49,7 @@ export async function fetchTransfers(
 async function fetchWithWindow(
   config: SyncConfig,
   facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date,
   onBatchFetched?: (batch: TransferEventData[]) => Promise<void>
@@ -57,6 +74,7 @@ async function fetchWithWindow(
       results = await fetchBigQuery(
         config,
         facilitator,
+        facilitatorConfig,
         currentStart,
         currentEnd
       );
@@ -65,12 +83,19 @@ async function fetchWithWindow(
       results = await fetchBitquery(
         config,
         facilitator,
+        facilitatorConfig,
         currentStart,
         currentEnd
       );
     }
     if (provider === QueryProvider.CDP) {
-      results = await fetchCDP(config, facilitator, currentStart, currentEnd);
+      results = await fetchCDP(
+        config,
+        facilitator,
+        facilitatorConfig,
+        currentStart,
+        currentEnd
+      );
     }
 
     if (!results) {
@@ -101,6 +126,7 @@ async function fetchWithWindow(
 async function fetchWithOffset(
   config: SyncConfig,
   facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date,
   onBatchFetched?: (batch: TransferEventData[]) => Promise<void>
@@ -114,6 +140,7 @@ async function fetchWithOffset(
   const results = await fetchWithOffsetPagination(
     config,
     facilitator,
+    facilitatorConfig,
     since,
     now
   );

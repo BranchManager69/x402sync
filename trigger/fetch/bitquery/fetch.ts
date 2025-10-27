@@ -1,9 +1,15 @@
 import { logger } from '@trigger.dev/sdk/v3';
-import { SyncConfig, Facilitator, TransferEventData } from '../../types';
+import {
+  SyncConfig,
+  Facilitator,
+  TransferEventData,
+  FacilitatorConfig,
+} from '../../types';
 
 export async function fetchWithOffsetPagination(
   config: SyncConfig,
   facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date
 ): Promise<TransferEventData[]> {
@@ -14,8 +20,19 @@ export async function fetchWithOffsetPagination(
   while (hasMore) {
     logger.log(`[${config.chain}] Fetching with offset: ${offset}`);
 
-    const query = config.buildQuery(config, facilitator, since, now, offset);
-    const transfers = await executeBitqueryRequest(config, facilitator, query);
+    const query = config.buildQuery(
+      config,
+      facilitatorConfig,
+      since,
+      now,
+      offset
+    );
+    const transfers = await executeBitqueryRequest(
+      config,
+      facilitator,
+      facilitatorConfig,
+      query
+    );
 
     allTransfers.push(...transfers);
 
@@ -32,6 +49,7 @@ export async function fetchWithOffsetPagination(
 export async function fetchBitquery(
   config: SyncConfig,
   facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   since: Date,
   now: Date
 ): Promise<TransferEventData[]> {
@@ -39,13 +57,14 @@ export async function fetchBitquery(
     `[${config.chain}] Fetching Bitquery data from ${since.toISOString()} to ${now.toISOString()}`
   );
 
-  const query = config.buildQuery(config, facilitator, since, now);
-  return executeBitqueryRequest(config, facilitator, query);
+  const query = config.buildQuery(config, facilitatorConfig, since, now);
+  return executeBitqueryRequest(config, facilitator, facilitatorConfig, query);
 }
 
 async function executeBitqueryRequest(
   config: SyncConfig,
   facilitator: Facilitator,
+  facilitatorConfig: FacilitatorConfig,
   query: string
 ): Promise<TransferEventData[]> {
   const headers = new Headers();
@@ -81,5 +100,10 @@ async function executeBitqueryRequest(
     );
   }
 
-  return config.transformResponse(result.data, config, facilitator);
+  return config.transformResponse(
+    result.data,
+    config,
+    facilitator,
+    facilitatorConfig
+  );
 }

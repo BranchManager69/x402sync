@@ -1,11 +1,11 @@
 import { createEvmChainConfig } from '../../../../fetch/bitquery/query';
 import { Chain } from '@/trigger/types';
-import { FACILITATORS } from '@/trigger/config';
+import { FACILITATORS_BY_CHAIN } from '@/trigger/config';
 
 export const polygonChainConfig = createEvmChainConfig({
   cron: '*/30 * * * *',
   maxDuration: 1000,
   network: 'polygon',
   chain: 'matic',
-  facilitators: FACILITATORS.filter(f => f.chain === Chain.POLYGON),
+  facilitators: FACILITATORS_BY_CHAIN(Chain.POLYGON),
 });

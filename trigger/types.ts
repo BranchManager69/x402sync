@@ -31,7 +31,7 @@ interface BaseQueryConfig {
   apiUrl?: string;
   buildQuery: (
     config: SyncConfig,
-    facilitator: Facilitator,
+    facilitatorConfig: FacilitatorConfig,
     since: Date,
     now: Date,
     offset?: number
@@ -39,7 +39,8 @@ interface BaseQueryConfig {
   transformResponse: (
     data: unknown,
     config: SyncConfig,
-    facilitator: Facilitator
+    facilitator: Facilitator,
+    facilitatorConfig: FacilitatorConfig
   ) => TransferEventData[] | Promise<TransferEventData[]>;
 }
 
@@ -76,13 +77,16 @@ export enum Chain {
   SOLANA = 'solana',
 }
 
-export interface Facilitator {
-  id: string;
-  syncStartDate: Date;
-  enabled: boolean;
+export interface FacilitatorConfig {
   address: string;
   token: Token;
-  chain: string;
+  syncStartDate: Date;
+  enabled: boolean;
+}
+
+export interface Facilitator {
+  id: string;
+  addresses: Partial<Record<Chain, FacilitatorConfig[]>>;
 }
 
 export interface Token {
